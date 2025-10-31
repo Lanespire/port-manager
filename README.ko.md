@@ -4,7 +4,7 @@
 
 Tauri 2와 React로 구축된 모던한 크로스 플랫폼 포트 관리 애플리케이션입니다.
 
-![포트 관리](./docs/screenshot.png)
+![포트 관리](./app.png)
 
 ## ✨ 기능
 

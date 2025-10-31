@@ -4,7 +4,7 @@
 
 Una aplicación moderna multiplataforma de gestión de puertos construida con Tauri 2 y React.
 
-![Gestor de Puertos](./docs/screenshot.png)
+![Gestor de Puertos](./app.png)
 
 ## ✨ Características
 

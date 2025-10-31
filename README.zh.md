@@ -4,7 +4,7 @@
 
 使用Tauri 2和React构建的现代跨平台端口管理应用程序。
 
-![端口管理](./docs/screenshot.png)
+![端口管理](./app.png)
 
 ## ✨ 功能
 

@@ -4,7 +4,7 @@
 
 Eine moderne plattformübergreifende Port-Management-Anwendung, erstellt mit Tauri 2 und React.
 
-![Port-Manager](./docs/screenshot.png)
+![Port-Manager](./app.png)
 
 ## ✨ Funktionen
 

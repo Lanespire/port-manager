@@ -4,7 +4,7 @@
 
 Une application moderne multiplateforme de gestion de ports construite avec Tauri 2 et React.
 
-![Gestionnaire de Ports](./docs/screenshot.png)
+![Gestionnaire de Ports](./app.png)
 
 ## ✨ Fonctionnalités
 
