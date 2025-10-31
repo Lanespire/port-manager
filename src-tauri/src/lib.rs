@@ -135,16 +135,45 @@ fn get_ports() -> Result<Vec<PortInfo>, String> {
 
 #[tauri::command]
 fn kill_port(pid: u32) -> Result<String, String> {
-    let output = Command::new("kill")
-        .args(["-9", &pid.to_string()])
-        .output()
-        .map_err(|e| format!("Failed to kill process: {}", e))?;
+    #[cfg(target_os = "macos")]
+    {
+        // First try SIGTERM (graceful shutdown)
+        let output = Command::new("kill")
+            .args([&pid.to_string()])
+            .output()
+            .map_err(|e| format!("Failed to kill process: {}", e))?;
 
-    if output.status.success() {
-        Ok(format!("Successfully killed process {}", pid))
-    } else {
-        let stderr = String::from_utf8_lossy(&output.stderr);
-        Err(format!("Failed to kill process: {}", stderr))
+        if output.status.success() {
+            Ok(format!("Successfully sent SIGTERM to process {}", pid))
+        } else {
+            // If SIGTERM fails, try SIGKILL
+            let output = Command::new("kill")
+                .args(["-9", &pid.to_string()])
+                .output()
+                .map_err(|e| format!("Failed to kill process: {}", e))?;
+
+            if output.status.success() {
+                Ok(format!("Successfully killed process {}", pid))
+            } else {
+                let stderr = String::from_utf8_lossy(&output.stderr);
+                Err(format!("Failed to kill process {}: {}", pid, stderr))
+            }
+        }
+    }
+
+    #[cfg(not(target_os = "macos"))]
+    {
+        let output = Command::new("kill")
+            .args(["-9", &pid.to_string()])
+            .output()
+            .map_err(|e| format!("Failed to kill process: {}", e))?;
+
+        if output.status.success() {
+            Ok(format!("Successfully killed process {}", pid))
+        } else {
+            let stderr = String::from_utf8_lossy(&output.stderr);
+            Err(format!("Failed to kill process: {}: {}", pid, stderr))
+        }
     }
 }
 
