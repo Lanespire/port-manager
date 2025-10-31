@@ -65,20 +65,20 @@ function App() {
   };
 
   const killProcess = async (pid: number) => {
-    if (!confirm(`${t.confirmStop} PID: ${pid}?`)) {
-      return;
-    }
+    setLoading(true);
     try {
       const result = await invoke<string>("kill_port", { pid });
       console.log(result);
-      // Wait a bit for the process to terminate
-      await new Promise(resolve => setTimeout(resolve, 500));
+      // Wait for the process to terminate
+      await new Promise(resolve => setTimeout(resolve, 1000));
       await fetchPorts();
     } catch (err) {
       console.error("Kill process error:", err);
-      alert(`${t.error}: ${err}`);
       // Still refresh to see if it worked
       await fetchPorts();
+      alert(`${t.error}: ${err}`);
+    } finally {
+      setLoading(false);
     }
   };
 
