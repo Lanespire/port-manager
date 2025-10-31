@@ -48,6 +48,7 @@ function App() {
   const [customCommand, setCustomCommand] = useState("");
   const [showTooltip, setShowTooltip] = useState(false);
   const [language, setLanguage] = useState<Language>("ja");
+  const [killingPid, setKillingPid] = useState<number | null>(null);
 
   const t = translations[language];
 
@@ -65,7 +66,7 @@ function App() {
   };
 
   const killProcess = async (pid: number) => {
-    setLoading(true);
+    setKillingPid(pid);
     try {
       const result = await invoke<string>("kill_port", { pid });
       console.log(result);
@@ -78,7 +79,7 @@ function App() {
       await fetchPorts();
       alert(`${t.error}: ${err}`);
     } finally {
-      setLoading(false);
+      setKillingPid(null);
     }
   };
 
@@ -335,8 +336,9 @@ function App() {
                           <button
                             className="action-btn kill-btn"
                             onClick={() => killProcess(port.pid)}
+                            disabled={killingPid === port.pid}
                           >
-                            {t.stop}
+                            {killingPid === port.pid ? t.loading : t.stop}
                           </button>
                         </td>
                       </tr>
