@@ -40,12 +40,15 @@ Tauri 2とReactで構築されたモダンなクロスプラットフォーム�
 
 ### ビルド済みバイナリをダウンロード
 
-1. [Releases](https://github.com/yourusername/tauri-port/releases)ページにアクセス
-2. お使いのプラットフォーム用の最新リリースをダウンロード：
-   - **macOS**: `.dmg` または `.app.tar.gz`
-   - **Windows**: `.msi` または `.exe`
-   - **Linux**: `.AppImage` または `.deb`
-3. インストールして実行
+1. [Releases](https://github.com/Lanespire/port-manager/releases)ページにアクセス
+2. macOS用の最新リリースをダウンロード：
+   - **macOS (Apple Silicon)**: `port-manager_aarch64.dmg`
+   - **macOS (Intel)**: `port-manager_x86_64.dmg`
+3. DMGを開いてアプリをApplicationsフォルダにドラッグ
+4. **macOSユーザーへの重要な注意**: 初回起動時、アプリが公証されていないためセキュリティ警告が表示されることがあります。回避方法：
+   - **方法1**: アプリを右クリック（またはControlキー+クリック）→「開く」を選択 → ダイアログで「開く」をクリック
+   - **方法2**: システム設定 → プライバシーとセキュリティ → 下にスクロールして「Port Manager」を見つける → 「このまま開く」をクリック
+   - この操作は初回のみ必要です。以降は通常通り開けます。
 
 ### 開発環境のセットアップ
 
