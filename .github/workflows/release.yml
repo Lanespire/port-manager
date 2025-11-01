@@ -103,9 +103,15 @@ jobs:
       - name: Install frontend dependencies
         run: npm install
 
-      - uses: tauri-apps/tauri-action@v0
+      - name: Install Tauri CLI
+        run: npm install --save-dev @tauri-apps/cli
+
+      - uses: tauri-apps/tauri-action@v0.5
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           releaseId: ${{ needs.create-release.outputs.release_id }}
           args: ${{ matrix.args }}
+          tagName: ${{ needs.create-release.outputs.version }}
+          releaseName: 'Port Manager ${{ needs.create-release.outputs.version }}'
+          tauriScript: npm run tauri
