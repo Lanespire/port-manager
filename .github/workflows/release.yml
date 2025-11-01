@@ -14,26 +14,57 @@ jobs:
     outputs:
       release_id: ${{ steps.create_release.outputs.id }}
       version: ${{ steps.version.outputs.version }}
+      should_release: ${{ steps.check_tag.outputs.should_release }}
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-      - name: Get version from package.json
+      - name: Get version and auto-increment if tag exists
         id: version
         run: |
-          VERSION=$(node -p "require('./package.json').version")
-          echo "version=v${VERSION}" >> $GITHUB_OUTPUT
+          CURRENT_VERSION=$(node -p "require('./package.json').version")
+          TAG="v${CURRENT_VERSION}"
 
-      - name: Check if tag exists
+          # Check if tag exists
+          if git rev-parse "refs/tags/${TAG}" >/dev/null 2>&1; then
+            echo "Tag ${TAG} already exists, auto-incrementing patch version..."
+
+            # Parse version (assuming semantic versioning: major.minor.patch)
+            IFS='.' read -r major minor patch <<< "${CURRENT_VERSION}"
+            NEW_PATCH=$((patch + 1))
+            NEW_VERSION="${major}.${minor}.${NEW_PATCH}"
+            TAG="v${NEW_VERSION}"
+
+            echo "New version: ${NEW_VERSION}"
+
+            # Update package.json
+            npm version ${NEW_VERSION} --no-git-tag-version
+
+            # Update tauri.conf.json
+            sed -i "s/\"version\": \".*\"/\"version\": \"${NEW_VERSION}\"/" src-tauri/tauri.conf.json
+
+            # Commit version bump
+            git config user.name "github-actions[bot]"
+            git config user.email "github-actions[bot]@users.noreply.github.com"
+            git add package.json src-tauri/tauri.conf.json
+            git commit -m "chore: bump version to ${NEW_VERSION} [skip ci]"
+            git push origin main
+          fi
+
+          echo "version=${TAG}" >> $GITHUB_OUTPUT
+
+      - name: Check if should create release
         id: check_tag
         run: |
           if git rev-parse "refs/tags/${{ steps.version.outputs.version }}" >/dev/null 2>&1; then
-            echo "exists=true" >> $GITHUB_OUTPUT
+            echo "should_release=false" >> $GITHUB_OUTPUT
           else
-            echo "exists=false" >> $GITHUB_OUTPUT
+            echo "should_release=true" >> $GITHUB_OUTPUT
           fi
 
       - name: Create tag
-        if: steps.check_tag.outputs.exists == 'false'
+        if: steps.check_tag.outputs.should_release == 'true'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
@@ -41,7 +72,7 @@ jobs:
           git push origin ${{ steps.version.outputs.version }}
 
       - name: Create Release
-        if: steps.check_tag.outputs.exists == 'false'
+        if: steps.check_tag.outputs.should_release == 'true'
         id: create_release
         uses: actions/create-release@v1
         env:
@@ -52,19 +83,23 @@ jobs:
           body: |
             ## Port Manager Release
 
-            Download the appropriate installer for your platform below.
+            **Platform Support**: macOS only (Apple Silicon & Intel)
+
+            Download the appropriate installer for your Mac below.
 
             ### Features
             - Port monitoring with detailed process information
             - Multi-language support (7 languages)
             - Stop processes with one click
             - Open ports in browser or custom application
+            - Auto-refresh when app becomes active
+            - Click anywhere on row to expand details
           draft: false
           prerelease: false
 
   build:
     needs: create-release
-    if: needs.create-release.outputs.release_id != ''
+    if: needs.create-release.outputs.release_id != '' && needs.create-release.outputs.should_release == 'true'
     strategy:
       fail-fast: false
       matrix:
@@ -73,10 +108,6 @@ jobs:
             args: '--target aarch64-apple-darwin'
           - platform: 'macos-latest'
             args: '--target x86_64-apple-darwin'
-          - platform: 'ubuntu-22.04'
-            args: ''
-          - platform: 'windows-latest'
-            args: ''
 
     runs-on: ${{ matrix.platform }}
     steps:
@@ -92,13 +123,7 @@ jobs:
       - name: Install Rust stable
         uses: dtolnay/rust-toolchain@stable
         with:
-          targets: ${{ matrix.platform == 'macos-latest' && 'aarch64-apple-darwin,x86_64-apple-darwin' || '' }}
-
-      - name: Install dependencies (ubuntu only)
-        if: matrix.platform == 'ubuntu-22.04'
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y libwebkit2gtk-4.0-dev libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf
+          targets: aarch64-apple-darwin,x86_64-apple-darwin
 
       - name: Install frontend dependencies
         run: npm install
