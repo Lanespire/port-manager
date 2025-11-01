@@ -40,7 +40,7 @@ Dieser Port-Manager ist ein perfektes Beispiel für das, was Tauri kann - eine v
 
 ### Vorkompilierte Binärdateien Herunterladen
 
-1. Besuchen Sie die [Releases](https://github.com/yourusername/tauri-port/releases)-Seite
+1. Besuchen Sie die [Releases](https://github.com/Lanespire/port-manager/releases/)-Seite
 2. Laden Sie die neueste Version für Ihre Plattform herunter：
    - **macOS**: `.dmg` oder `.app.tar.gz`
    - **Windows**: `.msi` oder `.exe`
