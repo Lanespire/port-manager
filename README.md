@@ -40,15 +40,12 @@ This port manager is a perfect example of what Tauri can do - a full-featured de
 
 ### Download Pre-built Binaries
 
-1. Go to the [Releases](https://github.com/Lanespire/port-manager/releases) page
-2. Download the latest release for macOS:
-   - **macOS (Apple Silicon)**: `port-manager_aarch64.dmg`
-   - **macOS (Intel)**: `port-manager_x86_64.dmg`
-3. Open the DMG and drag the app to Applications folder
-4. **Important for macOS users**: When you first open the app, macOS may show a security warning because the app is not notarized. To bypass this:
-   - **Method 1**: Right-click (or Control+click) on the app → Select "Open" → Click "Open" in the dialog
-   - **Method 2**: Go to System Settings → Privacy & Security → Scroll down to find "Port Manager" → Click "Open Anyway"
-   - You only need to do this once. After that, the app will open normally.
+1. Go to the [Releases](https://github.com/Lanespire/port-manager/releases/) page
+2. Download the latest release for your platform:
+   - **macOS**: `.dmg` or `.app.tar.gz`
+   - **Windows**: `.msi` or `.exe`
+   - **Linux**: `.AppImage` or `.deb`
+3. Install and run
 
 ### Development Setup
 

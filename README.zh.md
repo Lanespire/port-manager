@@ -40,7 +40,7 @@
 
 ### 下载预构建二进制文件
 
-1. 访问[Releases](https://github.com/yourusername/tauri-port/releases)页面
+1. 访问[Releases](https://github.com/Lanespire/port-manager/releases/)页面
 2. 下载适合您平台的最新版本：
    - **macOS**: `.dmg` 或 `.app.tar.gz`
    - **Windows**: `.msi` 或 `.exe`

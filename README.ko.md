@@ -40,7 +40,7 @@ Tauri 2와 React로 구축된 모던한 크로스 플랫폼 포트 관리 애플
 
 ### 사전 빌드된 바이너리 다운로드
 
-1. [Releases](https://github.com/yourusername/tauri-port/releases) 페이지로 이동
+1. [Releases](https://github.com/Lanespire/port-manager/releases/) 페이지로 이동
 2. 플랫폼에 맞는 최신 릴리스 다운로드：
    - **macOS**: `.dmg` 또는 `.app.tar.gz`
    - **Windows**: `.msi` 또는 `.exe`
