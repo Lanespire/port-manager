@@ -166,6 +166,21 @@ function App() {
     fetchPorts();
   }, []);
 
+  // アプリがアクティブになったときに自動更新
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (!document.hidden) {
+        fetchPorts();
+      }
+    };
+
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
+    return () => {
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+    };
+  }, []);
+
   const filteredAndSortedPorts = sortPorts(filterByPortRange(ports));
   const groupedPorts = groupPortsByRange(filteredAndSortedPorts);
   const sortedGroups = Array.from(groupedPorts.entries()).sort((a, b) => {
@@ -318,11 +333,14 @@ function App() {
 
                   return (
                     <>
-                      <tr key={rowKey}>
+                      <tr key={rowKey} onClick={() => toggleRowExpansion(rowKey)} style={{ cursor: "pointer" }}>
                         <td>
                           <button
                             className="expand-btn"
-                            onClick={() => toggleRowExpansion(rowKey)}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              toggleRowExpansion(rowKey);
+                            }}
                           >
                             {isExpanded ? "⌄" : ">"}
                           </button>
@@ -332,7 +350,7 @@ function App() {
                         <td>{port.process_name}</td>
                         <td>{port.protocol}</td>
                         <td>{port.memory_mb ? port.memory_mb.toFixed(2) : "N/A"}</td>
-                        <td>
+                        <td onClick={(e) => e.stopPropagation()}>
                           <button
                             className="action-btn kill-btn"
                             onClick={() => killProcess(port.pid)}
