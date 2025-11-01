@@ -40,7 +40,7 @@ Tauri 2とReactで構築されたモダンなクロスプラットフォーム�
 
 ### ビルド済みバイナリをダウンロード
 
-1. [Releases](https://github.com/yourusername/tauri-port/releases)ページにアクセス
+1. [Releases](https://github.com/Lanespire/port-manager/releases/)ページにアクセス
 2. お使いのプラットフォーム用の最新リリースをダウンロード：
    - **macOS**: `.dmg` または `.app.tar.gz`
    - **Windows**: `.msi` または `.exe`
