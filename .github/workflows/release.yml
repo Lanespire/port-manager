@@ -2,8 +2,12 @@ name: Release
 
 on:
   push:
+    paths:
+      - "src/*"
+      - "src-tauri/*"
     branches:
       - main
+      
 
 permissions:
   contents: write
